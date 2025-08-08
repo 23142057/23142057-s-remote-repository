@@ -1,0 +1,6 @@
+軸 Φ６軸 10 https pole 1000 30
+軸 Φ８軸 1 https pole8 1000 10
+軸 Φ10軸 10 https pole10 12 0
+ねじ M3ねじ40mm 5 https nezi 10 100
+アクチュエータ 775モーター 6 https 775 15000 8
+ねじ 30mmM4ねじ 20 https:sample-30mm sample-M4nezi 20 40
