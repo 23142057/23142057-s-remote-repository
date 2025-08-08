@@ -26,7 +26,7 @@ public:
 	void entry();
 	void edit();
 	void show();
-	void suggestion();
+	void truemoney();
 	bool operator<(const robotparts& other) const {
 		return typenumber < other.typenumber;
 	}
@@ -34,7 +34,7 @@ public:
 };
 
 ostream& operator<<(ostream& os, const robotparts& part) {//不足部品用のオペレーター
-	os << part.usedname << " (在庫: " << part.currentnumber << ", 基本個数: " << part.standard << ", URL: " << part.url << ", 型番: " << part.typenumber << ")";
+	os << part.usedname << " (在庫: " << part.currentnumber << ", 標準個数: " << part.standard << ", URL: " << part.url << ", 型番: " << part.typenumber << ")";
 	return os;
 }
 
@@ -42,7 +42,7 @@ set<robotparts> partsset;
 
 
 void robotparts::entry() {//部品登録関数
-	cout << "部品タイプ、通称、現在の在庫数、URL、型番、参考価格(円/個)、基本個数の順で入力" << endl;
+	cout << "部品タイプ、通称、現在の在庫数、URL、型番、参考価格(円/個)、標準個数の順で入力" << endl;
 
 	string partstype;
 	string partsusedname;
@@ -241,7 +241,7 @@ void robotparts::show() {
 	bool found = false;
 
 	if (showparts == "all") {
-		cout<<"部品タイプ、通称、現在の在庫数、URL、型番、参考価格(円/個)、基本個数" << endl;
+		cout<<"部品タイプ、通称、現在の在庫数、URL、型番、参考価格(円/個)、標準個数" << endl;
 		string line;
 		while (getline(infile, line)) {
 			cout << line <<	endl;
@@ -306,12 +306,12 @@ void robotparts::show() {
 	}
 }
 
-void robotparts::suggestion() {
-	int supportmoney;
+void robotparts::truemoney() {
+	int currentmoney;
 	ifstream infile("部品表.txt");
-	cout << "援助額を入力" << endl;
-	cin >> supportmoney;
 	bool found = false;
+	cout << "現在の資金（円）を入力（半角）" << endl;
+	cin >> currentmoney;
 
 	while (!infile.eof()) {
 		string type, usedname, url, typenumber;
@@ -321,11 +321,13 @@ void robotparts::suggestion() {
 		if (infile.fail()) break;
 
 		if (currentnumber <= standard) {
-			int needmoney = price * (standard - currentnumber);
+			int partmoney = price * (standard - currentnumber);
+			 currentmoney -= partmoney;
 			found = true;
 		}
 	}
 	infile.close();
+	cout << "現在の実質的な資金は　" <<currentmoney<<"円　です。" << endl;
 }
 
 
@@ -342,7 +344,7 @@ int main() {
 					 partstypenumber,partsprice,partsstandard };
 
 	string acttype;
-	cout << "実行タイプ( entry(登録) or show(閲覧) or edit(編集) )を入力" << endl;
+	cout << "実行タイプ( entry(登録) or show(閲覧) or edit(編集) or truemoney(実質資金) )を入力" << endl;
 	cin >> acttype;
 	if (acttype == "entry") {
 		Part.entry();
@@ -352,6 +354,9 @@ int main() {
 	}
 	else if (acttype == "edit") {
 		Part.edit();
+	}
+	else if (acttype == "truemoney") {
+		Part.truemoney();
 	}
 
 	else {
